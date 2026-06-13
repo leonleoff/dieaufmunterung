@@ -134,18 +134,70 @@
         <div class="button-container">
             <button onclick="guken()">Gucken</button>
         </div>
+
+        <div style="margin-bottom:16px; display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap;">
+            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px; font-weight:600;">Punkte: <span id="points">0</span></div>
+            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px; font-weight:600;">Rossmanns: <span id="rossmanns">0</span></div>
+            <button id="buyRossmann" style="padding:8px 14px;border-radius:12px;background:#2d3748;color:white;border:none;cursor:not-allowed;opacity:0.6;">Kaufe Rossmann (10)</button>
+        </div>
+
         <div class="result hidden" id="result">-</div>
     </div>
 
     <script>
+        // Game state
+        let points = 0;
+        let rossmanns = 0;
+
+        const pointsEl = document.getElementById('points');
+        const rossEl = document.getElementById('rossmanns');
+        const buyBtn = document.getElementById('buyRossmann');
+        const resultElement = document.getElementById('result');
+
+        function updateUI() {
+            pointsEl.textContent = points;
+            rossEl.textContent = rossmanns;
+            if (points >= 10) {
+                buyBtn.disabled = false;
+                buyBtn.style.cursor = 'pointer';
+                buyBtn.style.opacity = '1';
+            } else {
+                buyBtn.disabled = true;
+                buyBtn.style.cursor = 'not-allowed';
+                buyBtn.style.opacity = '0.6';
+            }
+        }
+
+        buyBtn.addEventListener('click', () => {
+            if (points >= 10) {
+                points -= 10;
+                rossmanns += 1;
+                updateUI();
+            }
+        });
+
+        // Passive income: jede 5 Sekunden +1 Punkt pro Rossmann
+        setInterval(() => {
+            if (rossmanns > 0) {
+                points += rossmanns;
+                updateUI();
+                // kleine visuelle Anzeige
+                resultElement.classList.remove('show');
+                void resultElement.offsetWidth;
+                resultElement.classList.add('show');
+            }
+        }, 5000);
+
         function guken() {
-            const resultElement = document.getElementById('result');
-            
+            // Erhöhe Punkte bei jedem Klick
+            points += 1;
+            updateUI();
+
             // Animation zurücksetzen
             resultElement.classList.remove('show', 'easter');
             resultElement.classList.add('hidden');
             resultElement.innerHTML = '-';
-            
+
             // Kurze Verzögerung für neue Animation
             setTimeout(() => {
                 const r = Math.random();
