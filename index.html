@@ -139,6 +139,15 @@
             <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px; font-weight:600;">Punkte: <span id="points">0</span></div>
             <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px; font-weight:600;">Rossmanns: <span id="rossmanns">0</span></div>
             <button id="buyRossmann" style="padding:8px 14px;border-radius:12px;background:#2d3748;color:white;border:none;cursor:not-allowed;opacity:0.6;">Kaufe Rossmann (10)</button>
+            <button id="sellRossmann" style="padding:8px 14px;border-radius:12px;background:#718096;color:white;border:none;">Verkaufe Rossmann</button>
+            <div style="width:100%;height:6px"></div>
+            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px; font-weight:600;">Minus Linus: <span id="minusLinus">0</span></div>
+            <button id="buyMinus" style="padding:8px 14px;border-radius:12px;background:#b02a2a;color:white;border:none;cursor:not-allowed;opacity:0.6;">Kaufe Minus Linus (100)</button>
+            <button id="sellMinus" style="padding:8px 14px;border-radius:12px;background:#718096;color:white;border:none;">Verkaufe Minus Linus</button>
+            <div style="width:100%;height:6px"></div>
+            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px; font-weight:600;">Hosenböcker: <span id="hosen">0</span></div>
+            <button id="buyHosen" style="padding:8px 14px;border-radius:12px;background:#2b8a3e;color:white;border:none;cursor:not-allowed;opacity:0.6;">Kaufe Hosenböcker (200)</button>
+            <button id="sellHosen" style="padding:8px 14px;border-radius:12px;background:#718096;color:white;border:none;">Verkaufe Hosenböcker</button>
         </div>
 
         <div class="result hidden" id="result">-</div>
@@ -148,26 +157,53 @@
         // Game state
         let points = 0;
         let rossmanns = 0;
+        let minusLinus = 0;
+        let hosen = 0;
 
         const pointsEl = document.getElementById('points');
         const rossEl = document.getElementById('rossmanns');
         const buyBtn = document.getElementById('buyRossmann');
+        const sellRoss = document.getElementById('sellRossmann');
+        const minusEl = document.getElementById('minusLinus');
+        const buyMinusBtn = document.getElementById('buyMinus');
+        const sellMinusBtn = document.getElementById('sellMinus');
+        const hosenEl = document.getElementById('hosen');
+        const buyHosenBtn = document.getElementById('buyHosen');
+        const sellHosenBtn = document.getElementById('sellHosen');
         const resultElement = document.getElementById('result');
 
         function updateUI() {
-            pointsEl.textContent = points;
+            pointsEl.textContent = Math.floor(points);
             rossEl.textContent = rossmanns;
-            if (points >= 10) {
-                buyBtn.disabled = false;
-                buyBtn.style.cursor = 'pointer';
-                buyBtn.style.opacity = '1';
-            } else {
-                buyBtn.disabled = true;
-                buyBtn.style.cursor = 'not-allowed';
-                buyBtn.style.opacity = '0.6';
-            }
+            minusEl.textContent = minusLinus;
+            hosenEl.textContent = hosen;
+
+            buyBtn.disabled = points < 10;
+            buyBtn.style.opacity = points >= 10 ? '1' : '0.6';
+            buyBtn.style.cursor = points >= 10 ? 'pointer' : 'not-allowed';
+
+            sellRoss.disabled = rossmanns <= 0;
+            sellRoss.style.opacity = rossmanns > 0 ? '1' : '0.6';
+            sellRoss.style.cursor = rossmanns > 0 ? 'pointer' : 'not-allowed';
+
+            buyMinusBtn.disabled = points < 100;
+            buyMinusBtn.style.opacity = points >= 100 ? '1' : '0.6';
+            buyMinusBtn.style.cursor = points >= 100 ? 'pointer' : 'not-allowed';
+
+            sellMinusBtn.disabled = minusLinus <= 0;
+            sellMinusBtn.style.opacity = minusLinus > 0 ? '1' : '0.6';
+            sellMinusBtn.style.cursor = minusLinus > 0 ? 'pointer' : 'not-allowed';
+
+            buyHosenBtn.disabled = points < 200;
+            buyHosenBtn.style.opacity = points >= 200 ? '1' : '0.6';
+            buyHosenBtn.style.cursor = points >= 200 ? 'pointer' : 'not-allowed';
+
+            sellHosenBtn.disabled = hosen <= 0;
+            sellHosenBtn.style.opacity = hosen > 0 ? '1' : '0.6';
+            sellHosenBtn.style.cursor = hosen > 0 ? 'pointer' : 'not-allowed';
         }
 
+        // Buy/sell handlers
         buyBtn.addEventListener('click', () => {
             if (points >= 10) {
                 points -= 10;
@@ -175,18 +211,70 @@
                 updateUI();
             }
         });
+        sellRoss.addEventListener('click', () => {
+            if (rossmanns > 0) {
+                rossmanns -= 1;
+                points += 10; // refund full price
+                updateUI();
+            }
+        });
 
-        // Passive income: jede 5 Sekunden +1 Punkt pro Rossmann
+        buyMinusBtn.addEventListener('click', () => {
+            if (points >= 100) {
+                points -= 100;
+                minusLinus += 1;
+                updateUI();
+            }
+        });
+        sellMinusBtn.addEventListener('click', () => {
+            if (minusLinus > 0) {
+                minusLinus -= 1;
+                points += 100;
+                updateUI();
+            }
+        });
+
+        buyHosenBtn.addEventListener('click', () => {
+            if (points >= 200) {
+                points -= 200;
+                hosen += 1;
+                updateUI();
+            }
+        });
+        sellHosenBtn.addEventListener('click', () => {
+            if (hosen > 0) {
+                hosen -= 1;
+                points += 200;
+                updateUI();
+            }
+        });
+
+        // Passive: Rossmanns give +1 per 5s (keep previous behavior)
         setInterval(() => {
             if (rossmanns > 0) {
                 points += rossmanns;
+                updateUI();
+                resultElement.classList.remove('show');
+                void resultElement.offsetWidth;
+                resultElement.classList.add('show');
+            }
+        }, 5000);
+
+        // Passive per-second effects: Hosenböcker +20/s each, Minus Linus -10/s each
+        setInterval(() => {
+            const delta = (hosen * 20) - (minusLinus * 10);
+            if (delta !== 0) {
+                points += delta;
                 updateUI();
                 // kleine visuelle Anzeige
                 resultElement.classList.remove('show');
                 void resultElement.offsetWidth;
                 resultElement.classList.add('show');
             }
-        }, 5000);
+        }, 1000);
+
+        // initial UI state
+        updateUI();
 
         function guken() {
             // Erhöhe Punkte bei jedem Klick
