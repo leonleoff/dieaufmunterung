@@ -83,6 +83,18 @@
             animation: slideIn 0.5s ease;
         }
 
+        /* Easter-egg styling */
+        .result.easter {
+            color: #e67e22;
+            text-shadow: 0 6px 18px rgba(230,126,34,0.3);
+            font-size: 2.2rem;
+        }
+
+        .result .emoji {
+            margin-left: 10px;
+            font-size: 1.2em;
+        }
+
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -130,18 +142,36 @@
             const resultElement = document.getElementById('result');
             
             // Animation zurücksetzen
-            resultElement.classList.remove('show');
+            resultElement.classList.remove('show', 'easter');
             resultElement.classList.add('hidden');
+            resultElement.innerHTML = '-';
             
             // Kurze Verzögerung für neue Animation
             setTimeout(() => {
-                // Zufälliger Wert: 50% Chance für 12,6 oder 12,7
-                const randomValue = Math.random() < 0.5 ? '12,6' : '12,7';
-                
-                resultElement.textContent = randomValue;
+                const r = Math.random();
+
+                // Sehr seltene Easter Eggs: jeweils ~1% Chance
+                if (r < 0.01) {
+                    // Hallo von Ziner mit einer Blume
+                    resultElement.innerHTML = 'Hallo von Ziner <span class="emoji">🌸</span>';
+                    resultElement.classList.add('easter');
+                } else if (r < 0.02) {
+                    // Krakadus mit einem Krokodil
+                    resultElement.innerHTML = 'Krakadus mit Krokodil <span class="emoji">🐊</span>';
+                    resultElement.classList.add('easter');
+                } else if (r < 0.03) {
+                    // Patatas Bravas mit Kartoffel und spanischer Flagge
+                    resultElement.innerHTML = 'Patatas Bravas <span class="emoji">🥔🇪🇸</span>';
+                    resultElement.classList.add('easter');
+                } else {
+                    // Standard-Ausgabe: 50/50 zwischen 12,6 und 12,7
+                    const normal = Math.random() < 0.5 ? '12,6' : '12,7';
+                    resultElement.textContent = normal;
+                }
+
                 resultElement.classList.remove('hidden');
                 resultElement.classList.add('show');
-            }, 100);
+            }, 120);
         }
     </script>
 </body>
