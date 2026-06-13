@@ -5,6 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guken App</title>
     <style>
+        :root{
+            --bg1: #667eea;
+            --bg2: #764ba2;
+            --card-bg: #ffffff;
+            --muted: #f1f5f9;
+            --accent: #667eea;
+            --danger: #e05a5a;
+            --success: #2ea05a;
+            --glass: rgba(255,255,255,0.8);
+        }
         * {
             margin: 0;
             padding: 0;
@@ -29,6 +39,71 @@
             text-align: center;
             max-width: 500px;
             width: 100%;
+        }
+
+        /* Controls and responsive layout */
+        .controls {
+            margin-bottom: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .stats {
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+            justify-content:center;
+        }
+
+        .stat {
+            background: var(--muted);
+            padding:8px 12px;
+            border-radius:12px;
+            font-weight:600;
+            color:#111827;
+            box-shadow: 0 8px 18px rgba(2,6,23,0.06);
+        }
+
+        .item-row {
+            display:flex;
+            gap:10px;
+            align-items:center;
+            flex-wrap:wrap;
+            justify-content:center;
+        }
+
+        .btn {
+            padding:10px 16px;
+            border-radius:12px;
+            border: none;
+            color: white;
+            background: #94a3b8;
+            box-shadow: 0 10px 24px rgba(15,23,42,0.08);
+            font-weight:700;
+            min-width:160px;
+            cursor:pointer;
+            transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+        }
+
+        .btn:hover{ transform: translateY(-3px); }
+        .btn:active{ transform: translateY(0); }
+
+        .btn.buy{ background: linear-gradient(90deg,var(--bg1),var(--bg2)); }
+        .btn.sell{ background: #718096; }
+        .btn.danger{ background: linear-gradient(90deg,#e07a7a,#c94b4b); }
+        .btn.success{ background: linear-gradient(90deg,#56c37a,#2ea05a); }
+
+        /* Make buttons full-width on small screens */
+        @media (max-width: 420px) {
+            .container { padding: 24px 18px; border-radius: 18px; }
+            h1 { font-size: 1.4rem; }
+            button, .btn { min-width: unset; width: 100%; padding:14px 18px; font-size:16px; }
+            .stat { padding:10px 14px; font-size:15px; }
+            .result { font-size:2rem; }
+            .item-row{flex-direction:column;}
+            .controls{align-items:stretch}
         }
 
         h1 {
@@ -135,19 +210,28 @@
             <button onclick="guken()">Gucken</button>
         </div>
 
-        <div style="margin-bottom:16px; display:flex; gap:12px; justify-content:center; align-items:center; flex-wrap:wrap;">
-            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px; font-weight:600;">Punkte: <span id="points">0</span></div>
-            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px; font-weight:600;">Rossmanns: <span id="rossmanns">0</span></div>
-            <button id="buyRossmann" style="padding:8px 14px;border-radius:12px;background:#2d3748;color:white;border:none;cursor:not-allowed;opacity:0.6;">Kaufe Rossmann (10)</button>
-            <button id="sellRossmann" style="padding:8px 14px;border-radius:12px;background:#718096;color:white;border:none;">Verkaufe Rossmann</button>
-            <div style="width:100%;height:6px"></div>
-            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px; font-weight:600;">Minus Linus: <span id="minusLinus">0</span></div>
-            <button id="buyMinus" style="padding:8px 14px;border-radius:12px;background:#b02a2a;color:white;border:none;cursor:not-allowed;opacity:0.6;">Kaufe Minus Linus (100)</button>
-            <button id="sellMinus" style="padding:8px 14px;border-radius:12px;background:#718096;color:white;border:none;">Verkaufe Minus Linus</button>
-            <div style="width:100%;height:6px"></div>
-            <div style="background:#f1f5f9;padding:8px 12px;border-radius:12px; font-weight:600;">Hosenböcker: <span id="hosen">0</span></div>
-            <button id="buyHosen" style="padding:8px 14px;border-radius:12px;background:#2b8a3e;color:white;border:none;cursor:not-allowed;opacity:0.6;">Kaufe Hosenböcker (200)</button>
-            <button id="sellHosen" style="padding:8px 14px;border-radius:12px;background:#718096;color:white;border:none;">Verkaufe Hosenböcker</button>
+        <div class="controls">
+            <div class="stats">
+                <div class="stat">Punkte: <span id="points">0</span></div>
+                <div class="stat">Rossmanns: <span id="rossmanns">0</span></div>
+            </div>
+
+            <div class="item-row">
+                <button id="buyRossmann" class="btn buy">Kaufe Rossmann (10)</button>
+                <button id="sellRossmann" class="btn sell">Verkaufe Rossmann</button>
+            </div>
+
+            <div class="item-row">
+                <div class="stat">Minus Linus: <span id="minusLinus">0</span></div>
+                <button id="buyMinus" class="btn buy danger">Kaufe Minus Linus (100)</button>
+                <button id="sellMinus" class="btn sell">Verkaufe Minus Linus</button>
+            </div>
+
+            <div class="item-row">
+                <div class="stat">Hosenbäcker: <span id="hosen">0</span></div>
+                <button id="buyHosen" class="btn buy success">Kaufe Hosenbäcker (200)</button>
+                <button id="sellHosen" class="btn sell">Verkaufe Hosenbäcker</button>
+            </div>
         </div>
 
         <div class="result hidden" id="result">-</div>
