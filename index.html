@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guken App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 2rem;
+        }
+
+        .button-container {
+            margin-bottom: 40px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .result.hidden {
+            opacity: 0;
+        }
+
+        .result.show {
+            opacity: 1;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 30px;
+            }
+
+            button {
+                padding: 14px 32px;
+                font-size: 16px;
+            }
+
+            .result {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Gucken 👀</h1>
+        <div class="button-container">
+            <button onclick="guken()">Gucken</button>
+        </div>
+        <div class="result hidden" id="result">-</div>
+    </div>
+
+    <script>
+        function guken() {
+            const resultElement = document.getElementById('result');
+            
+            // Animation zurücksetzen
+            resultElement.classList.remove('show');
+            resultElement.classList.add('hidden');
+            
+            // Kurze Verzögerung für neue Animation
+            setTimeout(() => {
+                // Zufälliger Wert: 50% Chance für 12,6 oder 12,7
+                const randomValue = Math.random() < 0.5 ? '12,6' : '12,7';
+                
+                resultElement.textContent = randomValue;
+                resultElement.classList.remove('hidden');
+                resultElement.classList.add('show');
+            }, 100);
+        }
+    </script>
+</body>
+</html>
